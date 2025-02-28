@@ -70,3 +70,47 @@ def handle_error(exc: Exception) -> Response:
         },
         status = status_code
     )
+
+def make_response(
+        message: str, 
+        status: int | str | HTTPStatus, 
+        headers: dict | None = None, 
+        **content
+) -> Response:
+    """Construct a standardized JSON response for API endpoints.
+
+    This function serializes your response message and any additional content into JSON format, 
+    automatically appending a UTC timestamp. It also sets the HTTP status code and allows for custom headers:
+
+        def my_route():
+            return make_response('success', 200)
+
+    Customize headers and include extra data by passing a headers dictionary and additional keyword arguments:
+
+        def my_route():
+            return make_response(
+                'success',
+                200,
+                headers={"Cache-Control": "no-cache"},
+                details="Upload file successfully"
+            )
+    """
+    timestamp_now = datetime.now(tz=timezone.utc)
+    default = {
+        "Cache-Control": "public, max-age=3600, must-revalidate",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+    }
+
+    if headers:
+        default.update(headers)
+
+    return Response(
+        response = {
+            "status": status,
+            "message": message,
+            "timestamp": timestamp_now.isoformat(),
+            **content
+        },
+        headers = default,
+        status = status
+    )
