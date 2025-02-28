@@ -52,7 +52,7 @@ def handle_error(exc: Exception) -> Response:
     status_code = getattr(exc, "code", 500)
     timestamp_now = datetime.now(tz=timezone.utc)
 
-    # Log server errors
+    current_app.logger.info(f'\"{request.method} {request.path}\" - {status_code}')
     if status_code >= 500:
         current_app.log_exception(exc)
 
@@ -96,6 +96,7 @@ def make_response(
             )
     """
     timestamp_now = datetime.now(tz=timezone.utc)
+    current_app.logger.info(f'\"{request.method} {request.path}\" - {status}')
     default = {
         "Cache-Control": "public, max-age=3600, must-revalidate",
         "Referrer-Policy": "strict-origin-when-cross-origin"
