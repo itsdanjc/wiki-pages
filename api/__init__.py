@@ -1,7 +1,8 @@
+import os
 from flask import Flask
 from .response import Response, handle_error
 from utils.utilities import env_to_bool
-import os
+from utils.log import config_log
 
 def create_api() -> Flask:
     """Creates an instance of a Flask object for api endpoints."""
@@ -13,8 +14,13 @@ def create_api() -> Flask:
     #Set debug mode
     app.debug = env_to_bool(os.getenv("DEBUG", ""))
 
+    #Configure log
+    log = config_log(app)
+
     #Register blueprints and defaults
     app.register_error_handler(Exception, handle_error)
     app.response_class = Response
 
+    app.logger.info(f"{app.name.upper()} module configured")
+    app.logger.info(f"Log at {log}")
     return app

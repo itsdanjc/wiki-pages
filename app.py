@@ -8,9 +8,7 @@ from utils.utilities import env_to_bool
 
 def create_app() -> DispatcherMiddleware:
     """Creates an instance of DispatcherMiddleware, combining the api and ui."""
-    if not os.environ.get("ENV_LOADED"):  
-        load_dotenv()
-        os.environ["ENV_LOADED"] = "1"
+    load_dotenv(override=True)
 
 
     ui_app = create_ui()
@@ -28,6 +26,6 @@ if __name__ == '__main__':
         os.getenv("HOSTNAME", "localhost"),
         int(os.getenv("PORT", 5000)),
         app,
-        use_reloader = env_to_bool(os.getenv("RELOADER_ENABLED", True)),
+        use_reloader = False,
         use_debugger = env_to_bool(os.getenv("DEBUG", True)),
     )
