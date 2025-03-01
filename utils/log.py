@@ -34,7 +34,7 @@ def config_log(app: Flask) -> str:
                 'format': f'[{app.name.upper()}] ' + '%(levelname)s: %(message)s',
             },
             'full': {
-                'format': os.getenv(
+                'format': app.config.get(
                     "LOG_FORMAT", 
                     "%(asctime)s [%(threadName)s:%(thread)d, %(filename)s:%(lineno)d] %(levelname)s: %(message)s"
                 )
@@ -46,7 +46,7 @@ def config_log(app: Flask) -> str:
                 'filename': log_file_path,
                 'mode': 'a',  # append mode
                 'formatter': 'full',
-                'level': os.getenv("LOG_LEVEL", "WARN").upper(),
+                'level': app.config.get("LOG_LEVEL"),
                 'encoding': 'utf-8'
             },
             'wsgi': {
@@ -62,4 +62,5 @@ def config_log(app: Flask) -> str:
     })
 
     logs_configured[app.name] = log_file_path
+    app.logger.info(f"Log At {log_file_path}")
     return log_file_path

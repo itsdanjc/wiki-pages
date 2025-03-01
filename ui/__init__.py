@@ -1,21 +1,18 @@
-import os
 from flask import Flask
-from utils.utilities import env_to_bool
+from utils.utilities import str_to_bool
 from utils.log import config_log
 
-def create_ui() -> Flask:
-    """Creates an instance of a Flask object for ui."""
-    app = Flask(__name__)
+class Ui(Flask):
+    def __init__(self, config: dict):
+        """Creates an instance of a Flask object for UI."""
+        super().__init__(__name__)
 
-    #Set the config from .env
-    app.config.from_prefixed_env("")
+        # Set the config from .conf
+        self.config.from_mapping(config)
 
-    #Set debug mode
-    app.debug = env_to_bool(os.getenv("DEBUG", ""))
-    
-    #Configure log
-    log = config_log(app)
+        # Set debug mode
+        self.debug = str_to_bool(config.get("FLASK_DEBUG", "0"))
 
-    app.logger.info(f"{app.name.upper()} module configured")
-    app.logger.info(f"Log at {log}")
-    return app
+        # Configure log
+        config_log(self)
+        self.logger.info(f"{self.name.upper()} module configured")

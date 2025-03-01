@@ -1,2 +1,26 @@
-def env_to_bool(env: str) -> bool:
-    return str(env).lower() in ("1", "true", "yes")
+from configparser import ConfigParser
+from platformdirs import site_config_dir
+import os, typing
+
+global CONFIG_PATH
+CONFIG_PATH = os.path.join(site_config_dir("wikipages", ensure_exists=True), "wikipages.conf")
+
+def get_config() -> dict:
+
+    if not os.path.exists(CONFIG_PATH):
+        print(f"Config not found at {CONFIG_PATH}. Run the installer (install.py) to configure")
+        return {}
+
+    config_parser = ConfigParser()
+    config_parser.read(CONFIG_PATH)
+
+    config_object = {}
+
+    for section in config_parser.sections():
+        for item, value in config_parser.items(section):
+            config_object[f'{section}_{item}'.upper()] = value
+
+    return config_object
+
+def str_to_bool(str: typing.Any) -> bool:
+    return f"{str}".lower() in {"1", "yes", "true"}
