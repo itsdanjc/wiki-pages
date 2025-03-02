@@ -22,5 +22,16 @@ def get_config() -> dict:
 
     return config_object
 
-def str_to_bool(str: typing.Any) -> bool:
+def str_to_bool(str: t.Any) -> bool:
     return f"{str}".lower() in {"1", "yes", "true"}
+
+def get_value(
+    config: Config | t.Mapping[t.Any, t.Any],
+    keys: t.Iterable[t.Any],
+    default: t.Any | None = None
+) -> str:
+    """Retrieve the first available value from the config using a list of keys."""
+    for key in keys:
+        value: str = config.get(key)
+        if value: return value
+    return default
