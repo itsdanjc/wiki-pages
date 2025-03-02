@@ -1,8 +1,9 @@
+from flask import Config
 from configparser import ConfigParser
 from platformdirs import site_config_dir
-import os, typing
+import typing as t
+import os
 
-global CONFIG_PATH
 CONFIG_PATH = os.path.join(site_config_dir("wikipages", ensure_exists=True), "wikipages.conf")
 
 def get_config() -> dict:

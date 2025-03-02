@@ -4,9 +4,7 @@ from datetime import datetime, timezone
 from logging.config import dictConfig
 
 logs_configured = {}
-LOG_PATH = os.path.normpath(
-    os.getenv("TEMP_FILE_PATH", f"{tempfile.gettempdir()}/wikipages")
-)
+LOG_PATH = os.path.normpath(f"{tempfile.gettempdir()}/wikipages")
 
 def config_log(app: Flask) -> str:
     """Configure log handlers for the given Flask instance.
@@ -15,7 +13,7 @@ def config_log(app: Flask) -> str:
     if app.name in logs_configured:
         return logs_configured[app.name]
 
-    timestamp_now_utc = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d")
+    timestamp_now_utc = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d") 
     log_file_name = f"wikipages_{app.name}_{timestamp_now_utc}.{tempfile.gettempprefix()}.log"
     log_file_path = os.path.join(LOG_PATH, log_file_name)
 
@@ -31,13 +29,13 @@ def config_log(app: Flask) -> str:
         'version': 1,
         'formatters': {
             'default': {
-                'format': f'[{app.name.upper()}] ' + '%(levelname)s: %(message)s',
+                'format': f'[{app.name.upper()}] ' + app.config.get(
+                    'LOG_FORMAT',
+                    '%(levelname)s: %(message)s'
+                )
             },
             'full': {
-                'format': app.config.get(
-                    "LOG_FORMAT", 
-                    "%(asctime)s [%(threadName)s:%(thread)d, %(filename)s:%(lineno)d] %(levelname)s: %(message)s"
-                )
+                'format': "%(asctime)s [%(threadName)s:%(thread)d, %(filename)s:%(lineno)d] %(levelname)s: %(message)s",
             }
         },
         'handlers': {
@@ -46,13 +44,13 @@ def config_log(app: Flask) -> str:
                 'filename': log_file_path,
                 'mode': 'a',  # append mode
                 'formatter': 'full',
-                'level': app.config.get("LOG_LEVEL"),
+                'level': app.config.get("LOG_LEVEL", "WARN"),
                 'encoding': 'utf-8'
             },
             'wsgi': {
                 'class': 'logging.StreamHandler',
                 'stream': 'ext://flask.logging.wsgi_errors_stream',
-                'level': 'DEBUG',
+                'level': app.config.get("LOG_LEVEL", "DEBUG"),
                 'formatter': 'default',
             },
         },

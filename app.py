@@ -4,7 +4,7 @@ from ui import Ui
 from flask import Config
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from werkzeug.serving import run_simple
-from utils.utilities import get_config
+from utils.utilities import get_config, str_to_bool
 
 def create_app() -> DispatcherMiddleware:
     """Creates an instance of DispatcherMiddleware, combining the api and ui."""
@@ -25,9 +25,10 @@ if __name__ == '__main__':
     config = get_config()
 
     run_simple(
-        os.getenv("HOSTNAME", "localhost"),
-        int(os.getenv("PORT", 5000)),
+        config.get("GLOBAL_HOSTNAME", "localhost"),
+        int(os.getenv("GLOBAL_PORT", 5000)),
         app,
-        use_reloader = config.get("USE_RELOADER", "1").lower() in {"1", "yes", "true"},
-        use_debugger = config.get("USE_DEBUG", "1").lower() in {"1", "yes", "true"},
+        use_reloader = str_to_bool(config.get("GLOBAL_RELOADER", "1")),
+        use_debugger = str_to_bool(config.get("GLOBAL_DEBUG", "1")),
+        threaded=True
     )

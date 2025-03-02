@@ -1,7 +1,6 @@
-import os
-from flask import Flask, Config
+from flask import Flask
 from .response import Response, handle_error
-from utils.utilities import str_to_bool
+from utils.utilities import str_to_bool, get_value
 from utils.log import config_log
 
 class Api(Flask):
@@ -13,7 +12,9 @@ class Api(Flask):
         self.config.from_mapping(config)
 
         #Set debug mode
-        self.debug = str_to_bool(config.get("FLASK_DEBUG", "0"))
+        self.debug = str_to_bool(
+            get_value(config, ("API_DEBUG", "GLOBAL_DEBUG"), False)
+        )
 
         #Configure log
         config_log(self)
