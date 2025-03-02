@@ -11,7 +11,7 @@ a clean, Git-powered way to manage your content.
 - [Introduction](#wikipages)
 - [Features](#features)
 - [Installation](#installation)
-  - [Automatic](#automatic-installation-recommended)
+  - <s>[Automatic](#automatic-installation)</s>
   - [Manual](#manual-installation)
 - [Contribute](#contribute)
 
@@ -39,20 +39,20 @@ a clean, Git-powered way to manage your content.
 **Want to contribute?** - Jump in and help the development of WikiPages - [read how](#contribute) below!
 
 ## Installation
-### Automatic installation (Recommended)
-1. #### Download and run `install.py`
+### <s>Automatic installation</s>
+1. <s>#### Download and run `install.py`</s>
 
     ```bash
     curl -O https://raw.githubusercontent.com/itsdanjc/wiki-pages/refs/heads/development/install.py && python install.py
     ```
     This command pulls down the installer, clones the repo, sets things up, and installs all the dependencies for WikiPages.
 
-2. #### Start WikiPages:
+2. <s>#### Start WikiPages:</s>
     
     ```bash
     python app.py
     ```
-    If you’ve enabled debug mode, your terminal should show something like this:
+    <s>If you’ve enabled debug mode, your terminal should show something like this:</s>
 
     ```bash
     [API] INFO: API module configured
@@ -61,7 +61,7 @@ a clean, Git-powered way to manage your content.
     [UI] INFO: Log at /var/log/wikipages/wikipages_ui_2025-03-01.tmp.log
     ```
 
-    And that’s it - WikiPages is up and running!
+    <s>And that’s it - WikiPages is up and running!</s>
 
 ### Manual installation
 If you prefer to do it step-by-step (or have special requirements), follow these:
